@@ -1,40 +1,41 @@
-import { Job } from "../models/job.model";
+import { Job } from "../models/job.model.js";
 
-export const postJob=async (req,res)=>{
-    try {
-        const {title,description,requirements,salary,location,jobType,experience,position,companyId}=req.body;
-        const userId=req.id;
+export const postJob = async (req, res) => {
+  try {
+    const { title, description, requirements, salary, location, jobType, experienceLevel, position, company } = req.body;
+    const userId = req.id;
 
-        
-        if (!title || !description || !requirements || !salary || !location || !jobType || !experience || !position || !companyId) {
-            return res.status(400).json({
-                message: "Somethin is missing.",
-                success: false
-            })
-        };
-
-        const job = await Job.create({
-            title,
-            description,
-            requirements: requirements.split(","),
-            salary: Number(salary),
-            location,
-            jobType,
-            experienceLevel: experience,
-            position,
-            company: companyId,
-            created_by: userId
-        });
-        return res.status(201).json({
-            message: "New job created successfully.",
-            job,
-            success: true
-        });
-    } catch (error) {
-        console.log(error)
-        
+    if (!title || !description || !requirements || !salary || !location || !jobType || !experienceLevel || !position || !company) {
+      return res.status(400).json({
+        message: "Somethin is missing.",
+        success: false,
+      });
     }
-}
+
+    const job = await Job.create({
+      title,
+      description,
+      requirements: requirements,
+      salary: Number(salary),
+      location,
+      jobType,
+      experienceLevel: Number(experienceLevel),
+      position: Number(position),
+      company,
+      created_by: userId,
+    });
+
+    return res.status(201).json({
+      message: "New job created successfully.",
+      job,
+      success: true,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Server error", success: false });
+  }
+};
+
 
 export const getAllJobs=async(req,res)=>{
     try {
@@ -46,7 +47,7 @@ export const getAllJobs=async(req,res)=>{
             ]
         }
 
-        const jobs=await job.find(query).populate({
+        const jobs=await Job.find(query).populate({
             path:"company"
         }).sort({createdAt:-1});
 
