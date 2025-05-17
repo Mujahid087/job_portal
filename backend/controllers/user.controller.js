@@ -2,6 +2,7 @@ import {User} from "../models/user.model.js"
 import bcrypt from "bcryptjs"
 import jwt from "jsonwebtoken"
 import getDataUri from "../utils/datauri.js"
+import cloudinary from "../utils/cloudinary.js"
 
 export const register=async(req,res)=>{
     try {
@@ -14,9 +15,11 @@ export const register=async(req,res)=>{
             })
         }
 
-        // const file=req.file 
-        // const fileUri=getDataUri(file)
-        // const cloudResponse=await cloudinary.uploader.upload(fileUri.content);
+        const file=req.file 
+        const fileUri=getDataUri(file)
+        const cloudResponse=await cloudinary.uploader.upload(fileUri.content);
+        
+
 
         const user=await User.findOne({email})
         if(user){
@@ -32,8 +35,13 @@ export const register=async(req,res)=>{
             email,
             phoneNumber,
             password:hashedPassword,
-            role
+            role,
+            profile:{
+                public_id: cloudResponse.public_id,
+                profilePhoto:cloudResponse.secure_url,
+            }
         })
+        
 
         return res.status(201).json({
             message:"Account created successfully",
@@ -41,6 +49,10 @@ export const register=async(req,res)=>{
         })
     } catch (error) {
         console.log(error)
+         return res.status(500).json({
+            message: "Internal Server Error",
+            success: false,
+        });
         
     }
 }

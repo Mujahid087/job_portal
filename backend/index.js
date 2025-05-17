@@ -18,14 +18,16 @@ app.use(express.urlencoded({extended:true}))
 app.use(cookieParser())
 
 
-const corsOptions={
-    origin:'http://localhost:5173',
-    Credentials:true
-}
+app.use(cors({
+  origin: 'http://localhost:5173', // Your React app's URL
+  credentials: true, // Important for cookies
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+ // adjust to your frontend URL
 
-app.use(cors(corsOptions))
 
-const PORT=process.env.PORT || 3000 
+const PORT=process.env.PORT || 5000
 
 
 app.use("/api/user", userRoute);

@@ -11,7 +11,8 @@ const userSchema=new mongoose.Schema({
         unique:true
     },
     phoneNumber:{
-        type:Number,
+        // type:Number,
+        type:String,
         required:true
     },
     password:{
@@ -32,7 +33,8 @@ const userSchema=new mongoose.Schema({
         profilePhoto:{
             type:String,
             default:""
-        }
+        },
+        public_id: { type: String } 
     },
 },{timestamps:true})
 
