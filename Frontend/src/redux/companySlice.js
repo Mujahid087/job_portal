@@ -11,7 +11,7 @@ const companySlice=createSlice({
         setSingleCompany(state,action){
             state.singleCompany=action.payload;
         },
-        serCompanies(state,action){
+        setCompanies(state,action){
             state.companies=action.payload;
         },
         setSearchCompanyByText:(state,action) => {
